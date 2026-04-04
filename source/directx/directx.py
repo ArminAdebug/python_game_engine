@@ -1,4 +1,4 @@
-from window import Window
+from source.raw_window import Window
 import time
 
 import comtypes
@@ -9,7 +9,7 @@ from ctypes import wintypes
 
 class DirectX:
     def __init__(self, window : Window):
-        self.dx9 = ctypes.WinDLL(r".\dxtools.dll")
+        self.dx9 = ctypes.WinDLL(r"source\directx\dxtools.dll")
 
         self.dx9.init_d3d9.argtypes = [ctypes.c_void_p]
         self.dx9.init_d3d9.restype = ctypes.c_long
@@ -28,7 +28,7 @@ class DirectX:
 
         self.hwnd = window.get_hwnd()
         self.hr = self.dx9.init_d3d9(self.hwnd)
-        
+
         
     def clear_color(self, color):
         
