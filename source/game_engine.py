@@ -74,7 +74,6 @@ class GameEngine:
 
             self.directx.clear_color(0xFF202020)
 
-
             self.directx.fill_rect(50, 50, 200, 200, 0xFFFF0000)
 
             image = sprite.Sprite(

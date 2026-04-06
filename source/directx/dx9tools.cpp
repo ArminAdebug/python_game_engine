@@ -21,8 +21,6 @@ struct TLVERTEX
 
 #define FVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
-
-
 // یک vertex ساده برای quad 2D
 struct Vertex2D
 {
@@ -135,31 +133,33 @@ extern "C"
 
     __declspec(dllexport) long begin_scene()
     {
-        if (!g_dev) return E_FAIL;
+        if (!g_dev)
+            return E_FAIL;
         return g_dev->BeginScene();
     }
 
     __declspec(dllexport) long end_scene()
     {
-        if (!g_dev) return E_FAIL;
+        if (!g_dev)
+            return E_FAIL;
         return g_dev->EndScene();
     }
-
 
     // ------------------------------------------------
     // create texture from ARGB numpy
     // ------------------------------------------------
     __declspec(dllexport)
-    IDirect3DTexture9* create_texture_argb(
-        const uint32_t* pixels,
+    IDirect3DTexture9 *
+    create_texture_argb(
+        const uint32_t *pixels,
         int width,
         int height,
-        int pitchBytes
-    )
+        int pitchBytes)
     {
-        if (!g_dev || !pixels) return nullptr;
+        if (!g_dev || !pixels)
+            return nullptr;
 
-        IDirect3DTexture9* tex = nullptr;
+        IDirect3DTexture9 *tex = nullptr;
 
         HRESULT hr = g_dev->CreateTexture(
             width,
@@ -169,8 +169,7 @@ extern "C"
             D3DFMT_A8R8G8B8,
             D3DPOOL_MANAGED,
             &tex,
-            nullptr
-        );
+            nullptr);
 
         if (FAILED(hr) || !tex)
             return nullptr;
@@ -178,8 +177,8 @@ extern "C"
         D3DLOCKED_RECT lr;
         tex->LockRect(0, &lr, nullptr, 0);
 
-        const uint8_t* src = (const uint8_t*)pixels;
-        uint8_t* dst = (uint8_t*)lr.pBits;
+        const uint8_t *src = (const uint8_t *)pixels;
+        uint8_t *dst = (uint8_t *)lr.pBits;
 
         int row = width * 4;
 
@@ -188,37 +187,35 @@ extern "C"
             memcpy(
                 dst + y * lr.Pitch,
                 src + y * pitchBytes,
-                row
-            );
+                row);
         }
 
         tex->UnlockRect(0);
         return tex;
-}
-
+    }
 
     // ------------------------------------------------
     // draw texture on rectangle
     // ------------------------------------------------
-    __declspec(dllexport)
-    void draw_texture_rect(
-        IDirect3DTexture9* tex,
+    __declspec(dllexport) void draw_texture_rect(
+        IDirect3DTexture9 *tex,
         float x,
         float y,
         float w,
-        float h
-    ){
-        if (!g_dev || !tex) return;
+        float h)
+    {
+        if (!g_dev || !tex)
+            return;
 
         TLVERTEX v[4];
 
         float x2 = x + w;
         float y2 = y + h;
 
-        v[0] = {x,  y,  0, 1, 0, 0};
-        v[1] = {x2, y,  0, 1, 1, 0};
+        v[0] = {x, y, 0, 1, 0, 0};
+        v[1] = {x2, y, 0, 1, 1, 0};
         v[2] = {x2, y2, 0, 1, 1, 1};
-        v[3] = {x,  y2, 0, 1, 0, 1};
+        v[3] = {x, y2, 0, 1, 0, 1};
 
         g_dev->SetTexture(0, tex);
         g_dev->SetFVF(FVF);
@@ -227,10 +224,7 @@ extern "C"
             D3DPT_TRIANGLEFAN,
             2,
             v,
-            sizeof(TLVERTEX)
-        );
+            sizeof(TLVERTEX));
         std::cout << "drawing texture" << std::endl;
-
     }
-
 }

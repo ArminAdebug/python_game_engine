@@ -4,7 +4,8 @@ import numpy as np
 
 class DirectX:
     def __init__(self, hwnd):
-        self.dx9 = ctypes.WinDLL(r"F:\docc\armin\+Dev\Code\Python\3d test\w\source\directx\dxtools.dll")
+        self.dx9 = ctypes.WinDLL(
+            r"F:\docc\armin\+Dev\Code\Python\3d test\w\source\directx\dxtools.dll")
 
         self.dx9.init_d3d9.argtypes = [ctypes.c_void_p]
         self.dx9.init_d3d9.restype = ctypes.c_long
@@ -16,7 +17,8 @@ class DirectX:
         self.dx9.clear_color.argtypes = [ctypes.c_uint]
         self.dx9.clear_color.restype = ctypes.c_long
 
-        self.dx9.fill_rect.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_uint]
+        self.dx9.fill_rect.argtypes = [
+            ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_uint]
         self.dx9.fill_rect.restype = ctypes.c_long
 
         self.dx9.begin_scene.argtypes = []
@@ -28,7 +30,9 @@ class DirectX:
             raise OSError(f"DX init failed: {self.hr}")
 
         self.init_texture()
-        
+
+        self.test_texture = 0xFFFF00FF
+
     def begin(self):
         self.dx9.begin_scene()
 
@@ -45,7 +49,6 @@ class DirectX:
         ]
         self.dx9.create_texture_argb.restype = ctypes.c_void_p
 
-
         self.dx9.draw_texture_rect.argtypes = [
             ctypes.c_void_p,
             ctypes.c_float,
@@ -54,11 +57,7 @@ class DirectX:
             ctypes.c_float
         ]
 
-
-
-
     def clear_color(self, color):
-
 
         if self.hr != 0:
             raise OSError(f"init failed: {self.hr:#x}")
@@ -66,10 +65,10 @@ class DirectX:
         self.dx9.clear_color(color)
 
     def fill_rect(self,
-                  x : int,
-                  y : int,
-                  w : int,
-                  h : int,
+                  x: int,
+                  y: int,
+                  w: int,
+                  h: int,
                   color):
         """_summary_
 
@@ -84,14 +83,13 @@ class DirectX:
             OSError: if directx init failed
         """
 
-
         if self.hr != 0:
             raise OSError(f"init failed: {self.hr:#x}")
 
         self.dx9.fill_rect(x, y, w, h, color)
 
-
     # -------------------------
+
     def clear(self, color):
         self.dx9.clear_color(color)
 
@@ -123,7 +121,7 @@ class DirectX:
     # -------------------------
     def draw_texture(self, tex, x, y, w, h):
         self.dx9.draw_texture_rect(
-            tex,
+            id(self.test_texture),
             x,
             y,
             w,

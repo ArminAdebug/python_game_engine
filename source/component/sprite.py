@@ -14,11 +14,11 @@ class Sprite(Component):
         self.size = self.image.size
 
         self.pixel_array = self._convert2argb()
-        
+
         self.texture = directx.create_texture_from_argb(
             self.pixel_array
         )
-        
+
     def _convert2argb(self):
 
         rgba = np.array(self.image, dtype=np.uint32)
