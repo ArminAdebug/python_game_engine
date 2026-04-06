@@ -4,7 +4,6 @@ from source.window_ui import Ui_MainWindow
 from PyQt6.QtCore import QTimer
 
 
-
 class Window(QMainWindow):
     def __init__(self, directx_hwnd):
         super().__init__()
@@ -22,8 +21,7 @@ class Window(QMainWindow):
         layout = QVBoxLayout(self.ui.widget)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(container)
-        
+
         self.timer = QTimer()
-        
+
         self.show()
-        

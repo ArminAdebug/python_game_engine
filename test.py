@@ -1,13 +1,18 @@
-from PyQt6.QtCore import QBasicTimer
+breakpoint()
+a = 5
 
-def wr():
-    def main(inp : int) -> bool:
-        return inp % 2 == 0
+print("mamad")
 
-    return main
+def main(inte : int):
+    
+    h = inte ** 2
+    
+    print( h + 1)
+    
+    return h
 
-QBasicTimer.wrt = wr
+f = main(a)
 
-b = QBasicTimer
+print( f + a)
 
 

@@ -4,6 +4,7 @@ from source.raw_window import Window
 
 import time
 
+
 class FrameInfo:
     """
     ### parameters for each frame:
@@ -13,27 +14,29 @@ class FrameInfo:
     * frames : frames count (can be used for index)
     * delta_time : each frames delta time
     """
+
     def __init__(self):
         self.start_time = time.perf_counter()
         self.total_time = 0
         self.last_time = self.start_time
         self.frames = 0
         self.delta_time = 1
-        
+
     def update(self):
         self.delta_time = time.perf_counter() - self.last_time
         self.last_time = time.perf_counter()
         self.total_time = self.last_time - self.start_time
         self.frames += 1
-        
+
 
 UpdateLoop = Callable[[list[Callable], Callable, FrameInfo], None]
 
+
 class Core:
-    def __init__(self, dwindow : Window):
+    def __init__(self, dwindow: Window):
         self.directx_window = dwindow
-    
-    def get_loop_update(self, funcs : list) -> UpdateLoop:
+
+    def get_loop_update(self, funcs: list) -> UpdateLoop:
         """_summary_
 
         Args:
@@ -48,21 +51,20 @@ class Core:
             if not isinstance(func, Callable):
                 raise ValueError("Some things on this list are not Function")
 
-        
-        def update_loop(funcs : list[Callable], exiting : Callable, frame_info : FrameInfo) -> None:
-
+        def update_loop(funcs: list[Callable], exiting: Callable, frame_info: FrameInfo) -> None:
 
             # this function will stop QTimer
             exiting()
 
             for func in funcs:
-                try:
-                    func()
-                    
-                except Exception as e:
-                    print(e)
+                # try:
+                func()
 
-                   
+                # except Exception as e:
+                #    print(e)
+
         return update_loop
 
-    
+
+if __name__ == "__main__":
+    pass

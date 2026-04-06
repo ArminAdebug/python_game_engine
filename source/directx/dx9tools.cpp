@@ -1,119 +1,236 @@
-#include "dx9tools.h"
+#include <d3d9.h>
+#include <stdint.h>
+#include <cstring>
+#include <windows.h>
+#include <iostream>
 
-static IDirect3D9*       g_d3d  = nullptr;
-static IDirect3DDevice9* g_dev  = nullptr;
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
 
-static D3DCOLOR to_d3dcolor(uint32_t argb) {
+// --- Globals ---
+
+static IDirect3D9 *g_d3d = nullptr;
+static IDirect3DDevice9 *g_dev = nullptr;
+
+struct TLVERTEX
+{
+    float x, y, z, rhw;
+    float u, v;
+};
+
+#define FVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
+
+
+
+// یک vertex ساده برای quad 2D
+struct Vertex2D
+{
+    float x, y, z, rhw;
+    D3DCOLOR color;
+    float u, v;
+};
+
+template <typename T>
+static void SafeRelease(T *&p)
+{
+    if (p)
+    {
+        p->Release();
+        p = nullptr;
+    }
+}
+
+static D3DCOLOR to_d3dcolor(uint32_t argb)
+{
     return D3DCOLOR_ARGB(
         (argb >> 24) & 0xFF,
         (argb >> 16) & 0xFF,
-        (argb >> 8)  & 0xFF,
-        (argb)       & 0xFF
-    );
+        (argb >> 8) & 0xFF,
+        (argb) & 0xFF);
 }
 
-template<typename T>
-static void SafeRelease(T*& p) { if (p) { p->Release(); p=nullptr; } }
+// --- C API ---
 
-extern "C" {
+extern "C"
+{
 
-long init_d3d9(HWND hwnd) {
-    if (!hwnd) return E_INVALIDARG;
+    // init_d3d9: ایجاد device
+    __declspec(dllexport) long init_d3d9(HWND hwnd)
+    {
+        if (!hwnd)
+            return E_INVALIDARG;
 
-    g_d3d = Direct3DCreate9(D3D_SDK_VERSION);
-    if (!g_d3d) return E_FAIL;
+        if (g_dev)
+        {
+            // قبلاً init شده
+            return S_OK;
+        }
 
-    D3DPRESENT_PARAMETERS pp = {};
-    pp.Windowed = TRUE;
-    pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    pp.hDeviceWindow = hwnd;
-    pp.BackBufferFormat = D3DFMT_X8R8G8B8;
-    pp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+        g_d3d = Direct3DCreate9(D3D_SDK_VERSION);
+        if (!g_d3d)
+            return E_FAIL;
 
-    HRESULT hr = g_d3d->CreateDevice(
-        D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd,
-        D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, &g_dev
-    );
+        D3DPRESENT_PARAMETERS pp = {};
+        pp.Windowed = TRUE;
+        pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+        pp.hDeviceWindow = hwnd;
+        pp.BackBufferFormat = D3DFMT_X8R8G8B8;
+        pp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-    if (FAILED(hr)) {
-        SafeRelease(g_d3d);
-        return hr;
+        HRESULT hr = g_d3d->CreateDevice(
+            D3DADAPTER_DEFAULT,
+            D3DDEVTYPE_HAL,
+            hwnd,
+            D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+            &pp,
+            &g_dev);
+
+        if (FAILED(hr))
+        {
+            SafeRelease(g_d3d);
+            return hr;
+        }
+
+        // تنظیمات پایه برای 2D
+        g_dev->SetRenderState(D3DRS_LIGHTING, FALSE);
+        g_dev->SetRenderState(D3DRS_ZENABLE, FALSE);
+        g_dev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+        g_dev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+        g_dev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+        g_dev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+        g_dev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        g_dev->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+
+        return S_OK;
     }
-    return S_OK;
+
+    __declspec(dllexport) void shutdown_d3d9(void)
+    {
+        SafeRelease(g_dev);
+        SafeRelease(g_d3d);
+    }
+
+    __declspec(dllexport) long clear_color(uint32_t argb)
+    {
+        if (!g_dev)
+            return E_FAIL;
+        return g_dev->Clear(0, nullptr, D3DCLEAR_TARGET, to_d3dcolor(argb), 1.0f, 0);
+    }
+
+    __declspec(dllexport) long fill_rect(int x, int y, int w, int h, uint32_t argb)
+    {
+        if (!g_dev)
+            return E_FAIL;
+        D3DRECT r{x, y, x + w, y + h};
+        return g_dev->Clear(1, &r, D3DCLEAR_TARGET, to_d3dcolor(argb), 1.0f, 0);
+    }
+
+    __declspec(dllexport) long present(void)
+    {
+        if (!g_dev)
+            return E_FAIL;
+        return g_dev->Present(nullptr, nullptr, nullptr, nullptr);
+    }
+
+    __declspec(dllexport) long begin_scene()
+    {
+        if (!g_dev) return E_FAIL;
+        return g_dev->BeginScene();
+    }
+
+    __declspec(dllexport) long end_scene()
+    {
+        if (!g_dev) return E_FAIL;
+        return g_dev->EndScene();
+    }
+
+
+    // ------------------------------------------------
+    // create texture from ARGB numpy
+    // ------------------------------------------------
+    __declspec(dllexport)
+    IDirect3DTexture9* create_texture_argb(
+        const uint32_t* pixels,
+        int width,
+        int height,
+        int pitchBytes
+    )
+    {
+        if (!g_dev || !pixels) return nullptr;
+
+        IDirect3DTexture9* tex = nullptr;
+
+        HRESULT hr = g_dev->CreateTexture(
+            width,
+            height,
+            1,
+            0,
+            D3DFMT_A8R8G8B8,
+            D3DPOOL_MANAGED,
+            &tex,
+            nullptr
+        );
+
+        if (FAILED(hr) || !tex)
+            return nullptr;
+
+        D3DLOCKED_RECT lr;
+        tex->LockRect(0, &lr, nullptr, 0);
+
+        const uint8_t* src = (const uint8_t*)pixels;
+        uint8_t* dst = (uint8_t*)lr.pBits;
+
+        int row = width * 4;
+
+        for (int y = 0; y < height; y++)
+        {
+            memcpy(
+                dst + y * lr.Pitch,
+                src + y * pitchBytes,
+                row
+            );
+        }
+
+        tex->UnlockRect(0);
+        return tex;
 }
 
-long clear_color(uint32_t argb) {
-    if (!g_dev) return E_FAIL;
-    return g_dev->Clear(0, nullptr, D3DCLEAR_TARGET, to_d3dcolor(argb), 1.0f, 0);
-}
 
-long fill_rect(int x, int y, int w, int h, uint32_t argb) {
-    if (!g_dev) return E_FAIL;
-    D3DRECT r{ x, y, x+w, y+h };
-    return g_dev->Clear(1, &r, D3DCLEAR_TARGET, to_d3dcolor(argb), 1.0f, 0);
-}
+    // ------------------------------------------------
+    // draw texture on rectangle
+    // ------------------------------------------------
+    __declspec(dllexport)
+    void draw_texture_rect(
+        IDirect3DTexture9* tex,
+        float x,
+        float y,
+        float w,
+        float h
+    ){
+        if (!g_dev || !tex) return;
 
-long present(void) {
-    if (!g_dev) return E_FAIL;
-    return g_dev->Present(nullptr, nullptr, nullptr, nullptr);
-}
+        TLVERTEX v[4];
 
-void shutdown_d3d9(void) {
-    SafeRelease(g_dev);
-    SafeRelease(g_d3d);
-}
+        float x2 = x + w;
+        float y2 = y + h;
 
-}
+        v[0] = {x,  y,  0, 1, 0, 0};
+        v[1] = {x2, y,  0, 1, 1, 0};
+        v[2] = {x2, y2, 0, 1, 1, 1};
+        v[3] = {x,  y2, 0, 1, 0, 1};
 
-// متغیرهای سراسری که قبلاً داشتی
-extern IDirect3DDevice9* g_dev; 
+        g_dev->SetTexture(0, tex);
+        g_dev->SetFVF(FVF);
 
-// ۱. تابع تنظیم کامل دوربین
-void set_camera(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float fovDeg) {
-    if (!g_dev) return;
+        g_dev->DrawPrimitiveUP(
+            D3DPT_TRIANGLEFAN,
+            2,
+            v,
+            sizeof(TLVERTEX)
+        );
+        std::cout << "drawing texture" << std::endl;
 
-    // ماتریس View (موقعیت و چرخش)
-    D3DXMATRIX matView, matRot;
-    D3DXVECTOR3 eye(posX, posY, posZ);
-    D3DXVECTOR3 lookAt(0, 0, 1); // جهت نگاه پیش‌فرض
-    D3DXVECTOR3 up(0, 1, 0);
+    }
 
-    // اعمال چرخش
-    D3DXMatrixRotationYawPitchRoll(&matRot, rotY, rotX, rotZ);
-    D3DXVec3TransformNormal(&lookAt, &lookAt, &matRot);
-    lookAt += eye;
-
-    D3DXMatrixLookAtLH(&matView, &eye, &lookAt, &up);
-    g_dev->SetTransform(D3DTS_VIEW, &matView);
-
-    // ماتریس Projection (FOV)
-    D3DXMATRIX matProj;
-    float aspect = 1.33f; // معمولاً باید نسبت عرض به ارتفاع پنجره باشد
-    float fovRad = fovDeg * (D3DX_PI / 180.0f); // تبدیل درجه به رادیان
-    D3DXMatrixPerspectiveFovLH(&matProj, fovRad, aspect, 1.0f, 1000.0f);
-    g_dev->SetTransform(D3DTS_PROJECTION, &matProj);
-}
-
-// ۲. لود کردن عکس (Texture)
-IDirect3DTexture9* load_texture(const char* filename) {
-    IDirect3DTexture9* tex = nullptr;
-    D3DXCreateTextureFromFileA(g_dev, filename, &tex);
-    return tex;
-}
-
-// ۳. نمایش عکس روی صفحه
-void draw_texture(IDirect3DTexture9* tex, int x, int y, int w, int h) {
-    if (!g_dev || !tex) return;
-
-    ID3DXSprite* sprite;
-    D3DXCreateSprite(g_dev, &sprite);
-
-    sprite->Begin(D3DXSPRITE_ALPHABLEND);
-    D3DXVECTOR3 pos((float)x, (float)y, 0.0f);
-    
-    // تنظیم اندازه (Scale) اگر لازم بود اینجا ماتریس اسکیل بدید
-    sprite->Draw(tex, NULL, NULL, &pos, 0xFFFFFFFF);
-    
-    sprite->End();
-    sprite->Release();
 }
