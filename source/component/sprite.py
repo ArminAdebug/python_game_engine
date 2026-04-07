@@ -13,21 +13,19 @@ class Sprite(Component):
         self.image = Image.open(image_file_path).convert("RGBA")
         self.size = self.image.size
 
-        self.pixel_array = self._convert2argb()
+        self.bgra_array = self._convert2argb()
 
         self.texture = directx.create_texture_from_argb(
-            self.pixel_array
+            self.bgra_array
         )
 
     def _convert2argb(self):
+        rgba = np.array(self.image, dtype=np.uint8)
+        #bgra = rgba[:, :, [0,3,2,1]]  # swap R and B
+        r = rgba[::,::,0]
+        g = rgba[::,::,1]
+        b = rgba[::,::,2]
+        a = rgba[::,::,3]
 
-        rgba = np.array(self.image, dtype=np.uint32)
-
-        r = rgba[:, :, 0]
-        g = rgba[:, :, 1]
-        b = rgba[:, :, 2]
-        a = rgba[:, :, 3]
-
-        argb = np.stack([a, r, g, b], axis=-1)
-
-        return argb
+        bgra = np.stack((b, g, r, a), axis=-1)
+        return bgra

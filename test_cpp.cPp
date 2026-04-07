@@ -252,7 +252,7 @@ void Render()
 
     g_device->SetFVF(FVF);
 
-    // bind texture
+    // biicend texture
 
     g_device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
     g_device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);

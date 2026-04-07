@@ -4,12 +4,14 @@ import numpy as np
 
 class DirectX:
     def __init__(self, hwnd):
-        self.dx9 = ctypes.WinDLL(
-            r"F:\docc\armin\+Dev\Code\Python\3d test\w\source\directx\dxtools.dll")
+        try:
+            self.dx9 = ctypes.WinDLL(
+                r"F:\docc\armin\+Dev\Code\Python\3d test\w\source\directx\dxtools.dll")
 
-        self.dx9.init_d3d9.argtypes = [ctypes.c_void_p]
-        self.dx9.init_d3d9.restype = ctypes.c_long
-
+            self.dx9.init_d3d9.argtypes = [ctypes.c_void_p]
+            self.dx9.init_d3d9.restype = ctypes.c_long
+        except Exception as e:
+            print(e)
         self.dx9.clear_color.argtypes = [ctypes.c_uint32]
         self.dx9.present.argtypes = []
         self.dx9.shutdown_d3d9.argtypes = []
@@ -40,22 +42,24 @@ class DirectX:
         self.dx9.end_scene()
 
     def init_texture(self):
+        try:
+            self.dx9.create_texture_argb.argtypes = [
+                ctypes.c_void_p,
+                ctypes.c_int,
+                ctypes.c_int,
+                ctypes.c_int
+            ]
+            self.dx9.create_texture_argb.restype = ctypes.c_void_p
 
-        self.dx9.create_texture_argb.argtypes = [
-            ctypes.c_void_p,
-            ctypes.c_int,
-            ctypes.c_int,
-            ctypes.c_int
-        ]
-        self.dx9.create_texture_argb.restype = ctypes.c_void_p
-
-        self.dx9.draw_texture_rect.argtypes = [
-            ctypes.c_void_p,
-            ctypes.c_float,
-            ctypes.c_float,
-            ctypes.c_float,
-            ctypes.c_float
-        ]
+            self.dx9.draw_texture_rect.argtypes = [
+                ctypes.c_void_p,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float
+            ]
+        except Exception as e:
+            print(e)
 
     def clear_color(self, color):
 
@@ -103,7 +107,7 @@ class DirectX:
 
     # -------------------------
     def create_texture_from_argb(self, argb_2d: np.ndarray):
-        if argb_2d.dtype != np.uint32:
+        if argb_2d.dtype != np.uint8:
             raise TypeError("expected uint32 ARGB data")
 
         h, w, c = argb_2d.shape
@@ -114,16 +118,19 @@ class DirectX:
             w, h, pitch
         )
         if not ptr:
-            raise RuntimeError("texture creation failed")
+            raise RuntimeError(f"texture creation failed {ptr=}")
 
         return ptr
 
     # -------------------------
     def draw_texture(self, tex, x, y, w, h):
-        self.dx9.draw_texture_rect(
-            id(self.test_texture),
-            x,
-            y,
-            w,
-            h
-        )
+        try:
+            self.dx9.draw_texture_rect(
+                tex,
+                x,
+                y,
+                w,
+                h
+            )
+        except Exception as e:
+            print(repr(e))

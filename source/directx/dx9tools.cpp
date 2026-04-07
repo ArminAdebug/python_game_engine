@@ -3,12 +3,22 @@
 #include <cstring>
 #include <windows.h>
 #include <iostream>
+#include <stdio.h>
+#include <fstream>
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "gdi32.lib")
 
+void log()
+{
+    std::ofstream f("debug.txt", std::ios::app);
+    f << "hello from dll\n";
+    f.close();
+}
 // --- Globals ---
+
+
 
 static IDirect3D9 *g_d3d = nullptr;
 static IDirect3DDevice9 *g_dev = nullptr;
@@ -48,14 +58,25 @@ static D3DCOLOR to_d3dcolor(uint32_t argb)
         (argb) & 0xFF);
 }
 
-// --- C API ---
+struct Vertex
+{
+    float x,y,z,rhw;
+    float u,v;
+};
 
+
+
+// --- C API ---
 extern "C"
 {
-
+    void PrintHR(const char* msg, HRESULT hr)
+    {
+        std::cout << msg << hr << "\n";
+    }
     // init_d3d9: ایجاد device
     __declspec(dllexport) long init_d3d9(HWND hwnd)
     {
+
         if (!hwnd)
             return E_INVALIDARG;
 
@@ -90,7 +111,6 @@ extern "C"
             return hr;
         }
 
-        // تنظیمات پایه برای 2D
         g_dev->SetRenderState(D3DRS_LIGHTING, FALSE);
         g_dev->SetRenderState(D3DRS_ZENABLE, FALSE);
         g_dev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -151,13 +171,17 @@ extern "C"
     __declspec(dllexport)
     IDirect3DTexture9 *
     create_texture_argb(
-        const uint32_t *pixels,
+        const uint8_t *pixels,
         int width,
         int height,
         int pitchBytes)
-    {
-        if (!g_dev || !pixels)
+        {
+
+
+        if (!g_dev || !pixels){
+            std::cout << "device or pixels is null\n";
             return nullptr;
+        }
 
         IDirect3DTexture9 *tex = nullptr;
 
@@ -169,13 +193,20 @@ extern "C"
             D3DFMT_A8R8G8B8,
             D3DPOOL_MANAGED,
             &tex,
-            nullptr);
+            NULL);
 
-        if (FAILED(hr) || !tex)
+        if (FAILED(hr) || !tex){
+            PrintHR("bad input texture", hr);
             return nullptr;
+        }
 
         D3DLOCKED_RECT lr;
-        tex->LockRect(0, &lr, nullptr, 0);
+        hr = tex->LockRect(0, &lr, nullptr, 0);
+
+        if (FAILED(hr)){
+            PrintHR("locking rect failed", hr);
+            return nullptr;
+        }
 
         const uint8_t *src = (const uint8_t *)pixels;
         uint8_t *dst = (uint8_t *)lr.pBits;
@@ -190,7 +221,17 @@ extern "C"
                 row);
         }
 
-        tex->UnlockRect(0);
+        hr = tex->UnlockRect(0);
+        if (!tex){
+            PrintHR("texture pointer is null", hr);
+
+            return nullptr;
+        }
+        std::cout << "width=" << width
+                << " height=" << height
+                << " pitch=" << pitchBytes
+                << std::endl;
+
         return tex;
     }
 
@@ -203,28 +244,44 @@ extern "C"
         float y,
         float w,
         float h)
-    {
-        if (!g_dev || !tex)
-            return;
-
-        TLVERTEX v[4];
-
-        float x2 = x + w;
-        float y2 = y + h;
-
-        v[0] = {x, y, 0, 1, 0, 0};
-        v[1] = {x2, y, 0, 1, 1, 0};
-        v[2] = {x2, y2, 0, 1, 1, 1};
-        v[3] = {x, y2, 0, 1, 0, 1};
-
-        g_dev->SetTexture(0, tex);
-        g_dev->SetFVF(FVF);
-
-        g_dev->DrawPrimitiveUP(
-            D3DPT_TRIANGLEFAN,
-            2,
-            v,
-            sizeof(TLVERTEX));
-        std::cout << "drawing texture" << std::endl;
+{
+    if(!tex){
+        std::cout << "texture null\n";
+        return;
     }
+    float x2 = x + w;
+    float y2 = y + h;
+    Vertex quad[4];
+
+    quad[0] = {x, y, 0, 1, 0, 0};
+    quad[1] = {x2, y, 0, 1, 1, 0};
+    quad[2] = {x, y2, 0, 1, 0, 1};
+    quad[3] = {x2, y2, 0, 1, 1, 1};
+
+    g_dev->SetFVF(FVF);
+
+    g_dev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+    g_dev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+
+
+    g_dev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+    g_dev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+    g_dev->SetTexture(0, tex);
+
+    HRESULT hr = g_dev->DrawPrimitiveUP(
+        D3DPT_TRIANGLESTRIP,
+        2,
+        quad,
+        sizeof(Vertex)
+    );
+
+    if (FAILED(hr)){
+        PrintHR("rendering failed", hr);
+        return;
+    }
+
+    std::cout << "rendering\n";
 }
+
+}
+

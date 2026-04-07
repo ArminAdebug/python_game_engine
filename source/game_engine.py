@@ -17,11 +17,18 @@ class GameEngine:
     def __init__(self):
 
         # TODO: Handle Exception for window
-        self.directx_window = Window(500, 500)
+        self.directx_window = Window(1920, 1080)
         self.loop_state = False
         self.directx = DirectX(self.directx_window.get_hwnd())
 
         self.core = Core(self.directx_window)
+
+        self.test_image = sprite.Sprite(
+                r"F:\docc\armin\+Dev\Code\Python\3d test\w\yag.jpg", self.directx)
+
+        self.test_galaxy = sprite.Sprite(
+                r"F:\docc\armin\+Dev\Code\Python\3d test\w\galaxy.png", self.directx)
+
 
     def blank_screen(self):
         self.directx.clear_color(0xFF000000)
@@ -72,17 +79,14 @@ class GameEngine:
         try:
             self.directx.begin()
 
-            self.directx.clear_color(0xFF202020)
+            self.directx.clear_color(0xFF000000)
 
-            self.directx.fill_rect(50, 50, 200, 200, 0xFFFF0000)
+            #self.directx.fill_rect(50, 50, 200, 200, 0xFFFF0000)
 
-            image = sprite.Sprite(
-                r"F:\docc\armin\+Dev\Code\Python\3d test\w\test.png", self.directx)
-            print(f"{image.texture=}")
-            self.directx.draw_texture(image.texture, 0, 0, 256, 256)
+            self.directx.draw_texture(self.test_galaxy.texture, 0, 0, 1920, 1080)
 
             self.directx.end()
             self.directx.present()
 
         except Exception as e:
-            print(repr(e))
+            print("render_loop :", repr(e))

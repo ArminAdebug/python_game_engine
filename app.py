@@ -12,11 +12,6 @@ def main():
 
     game_engine = GameEngine()
 
-    s = sprite.Sprite(
-        r"F:\docc\armin\+Dev\Code\Python\3d test\w\test.png", game_engine.directx)
-
-    print(s.pixel_array)
-
     window = gui.Window(game_engine.directx_window.get_hwnd())
 
     window.ui.fun1.clicked.connect(lambda: game_engine.run_game(window.timer))
