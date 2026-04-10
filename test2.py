@@ -1,9 +1,19 @@
-from test import b, wr
 
-c = b.wrt()
+from test import G, key_g
 
-original = wr()
+class S:
 
-c : type[original]
+    key = key_g
 
-c()
+    def new_g():
+        return G(__class__.key)
+
+
+#from __future__ import annotations
+#from typing import TYPE_CHECKING
+#
+#if TYPE_CHECKING:
+#    from .scene import Scene
+
+
+S.new_g()

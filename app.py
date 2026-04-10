@@ -6,6 +6,8 @@ from source.game_engine import *
 
 import source.gui as gui
 
+import faulthandler
+faulthandler.enable()
 
 def main():
     app = QApplication(sys.argv)

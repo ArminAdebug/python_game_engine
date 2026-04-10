@@ -1,6 +1,6 @@
 import ctypes
 import numpy as np
-
+from source.logging import *
 
 class DirectX:
     def __init__(self, hwnd):
@@ -10,8 +10,10 @@ class DirectX:
 
             self.dx9.init_d3d9.argtypes = [ctypes.c_void_p]
             self.dx9.init_d3d9.restype = ctypes.c_long
+
         except Exception as e:
-            print(e)
+            log_exception(repr(e))
+
         self.dx9.clear_color.argtypes = [ctypes.c_uint32]
         self.dx9.present.argtypes = []
         self.dx9.shutdown_d3d9.argtypes = []
@@ -59,7 +61,7 @@ class DirectX:
                 ctypes.c_float
             ]
         except Exception as e:
-            print(e)
+            log_exception(repr(e))
 
     def clear_color(self, color):
 
@@ -133,4 +135,4 @@ class DirectX:
                 h
             )
         except Exception as e:
-            print(repr(e))
+            log_exception(repr(e))

@@ -7,7 +7,8 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import QSize
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -55,3 +56,16 @@ class Ui_MainWindow(object):
         self.fun1.setText(_translate("MainWindow", "PushButton"))
         self.fun2.setText(_translate("MainWindow", "PushButton"))
         self.fun3.setText(_translate("MainWindow", "exit"))
+
+def resizeEvent(self, event):
+    w = self.width()
+    h = self.height()
+
+    aspect = self.base_w / self.base_h
+
+    if w / h > aspect:
+        w = int(h * aspect)
+    else:
+        h = int(w / aspect)
+
+    self.setFixedSize(QSize(w, h))

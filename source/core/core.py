@@ -1,7 +1,5 @@
-from source.utility.helper import *
 from typing import Callable
 from source.raw_window import Window
-
 import time
 
 
@@ -35,35 +33,6 @@ UpdateLoop = Callable[[list[Callable], Callable, FrameInfo], None]
 class Core:
     def __init__(self, dwindow: Window):
         self.directx_window = dwindow
-
-    def get_loop_update(self, funcs: list) -> UpdateLoop:
-        """_summary_
-
-        Args:
-            funcs (list): functions to run in loop
-            exiting (func): funcs must be a function and if exiting return True loop will end.
-
-        Returns:
-            int: loop exit status
-        """
-
-        for func in funcs:
-            if not isinstance(func, Callable):
-                raise ValueError("Some things on this list are not Function")
-
-        def update_loop(funcs: list[Callable], exiting: Callable, frame_info: FrameInfo) -> None:
-
-            # this function will stop QTimer
-            exiting()
-
-            for func in funcs:
-                # try:
-                func()
-
-                # except Exception as e:
-                #    print(e)
-
-        return update_loop
 
 
 if __name__ == "__main__":
