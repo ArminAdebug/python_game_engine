@@ -240,23 +240,23 @@ extern "C"
     // ------------------------------------------------
     __declspec(dllexport) void draw_texture_rect(
         IDirect3DTexture9 *tex,
-        float x,
-        float y,
-        float w,
-        float h)
-{
+        float x0, float y0, float z0,
+        float x1, float y1, float z1,
+        float x2, float y2, float z2,
+        float x3, float y3, float z3)
+    {
+
     if(!tex){
         std::cout << "texture null\n";
         return;
     }
-    float x2 = x + w;
-    float y2 = y + h;
+
     Vertex quad[4];
 
-    quad[0] = {x, y, 0, 1, 0, 0};
-    quad[1] = {x2, y, 0, 1, 1, 0};
-    quad[2] = {x, y2, 0, 1, 0, 1};
-    quad[3] = {x2, y2, 0, 1, 1, 1};
+    quad[0] = {x0, y0, z0, 1, 0, 0};
+    quad[1] = {x1, y1, z1, 1, 1, 0};
+    quad[2] = {x2, y2, z2, 1, 0, 1};
+    quad[3] = {x3, y3, z3, 1, 1, 1};
 
     g_dev->SetFVF(FVF);
 
@@ -280,7 +280,7 @@ extern "C"
         return;
     }
 
-    std::cout << "rendering\n";
+
 }
 
 }

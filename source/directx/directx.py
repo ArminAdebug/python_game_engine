@@ -2,6 +2,28 @@ import ctypes
 import numpy as np
 from source.logging import *
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from source.components import Transform
+    from source.math import Quaternion, Vector3
+    from source.math import Vector3 as V3
+
+
+from ctypes import Structure, c_float, byref
+
+class Vector3(Structure):
+
+    _fields_ = [
+
+    ("x", c_float),
+
+    ("y", c_float),
+
+    ("z", c_float)
+
+]
+
 class DirectX:
     def __init__(self, hwnd):
         try:
@@ -35,7 +57,6 @@ class DirectX:
 
         self.init_texture()
 
-        self.test_texture = 0xFFFF00FF
 
     def begin(self):
         self.dx9.begin_scene()
@@ -58,7 +79,15 @@ class DirectX:
                 ctypes.c_float,
                 ctypes.c_float,
                 ctypes.c_float,
-                ctypes.c_float
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
             ]
         except Exception as e:
             log_exception(repr(e))
@@ -125,14 +154,19 @@ class DirectX:
         return ptr
 
     # -------------------------
-    def draw_texture(self, tex, x, y, w, h):
+    def draw_texture(self, tex,
+                    position0 : "V3",
+                    position1 : "V3",
+                    position2 : "V3",
+                    position3 : "V3"):
+
         try:
             self.dx9.draw_texture_rect(
                 tex,
-                x,
-                y,
-                w,
-                h
+                position0.x, position0.y, position0.z,
+                position1.x, position1.y, position1.z,
+                position2.x, position2.y, position2.z,
+                position3.x, position3.y, position3.z
             )
         except Exception as e:
             log_exception(repr(e))

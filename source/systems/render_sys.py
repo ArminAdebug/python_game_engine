@@ -1,10 +1,9 @@
-from source.components.component import Component
-from source.components.sprite import Sprite
-from source.components.transform import Transform
-
 from source.object.gameobject import GameObject
 from source.directx.directx import DirectX
 from source.logging import *
+from source.math import Quaternion, Vector3
+from source.components import Transform, Sprite, Component
+import math
 
 """
     InputSystem
@@ -13,6 +12,7 @@ from source.logging import *
     PhysicsSystem
     RenderSystem
 """
+
 
 
 class RenderSys:
@@ -45,6 +45,7 @@ class RenderSys:
         if not __class__.renderables & set([type(component) for component in game_object.all_components()]):
             if self.objects.count(game_object) > 0:
                 self.objects.remove(game_object)
+
     def is_registered(self, game_object : GameObject) -> bool:
         return self.objects.count(game_object) > 0
 
@@ -59,14 +60,50 @@ class RenderSys:
                         self._render_sprite(component, game_object.transform)
 
     def _render_sprite(self, sprite: Sprite, transform: Transform):
+        quat : Quaternion = transform.rotation
+        p1 = (
+        (-sprite.size[0]* transform.scale.x/2 , -sprite.size[1]* transform.scale.y/2, 0),
+        ( +sprite.size[0]* transform.scale.x/2, -sprite.size[1]* transform.scale.y/2, 0),
+        (-sprite.size[0]* transform.scale.x/2, +sprite.size[1]* transform.scale.y/2, 0),
+        ( +sprite.size[0]* transform.scale.x/2, +sprite.size[1]* transform.scale.y/2, 0)
+        )
+
+
+
+
+        p2 = []
+
+        for x,y,z in p1:
+
+            p = Quaternion(
+                x,
+                y,
+                z,
+                0
+            )
+
+            q_conjugate = Quaternion(
+                quat.x * -1,
+                quat.y * -1,
+                quat.z * -1,
+                quat.w
+            )
+
+            point = quat * p * q_conjugate
+            p2.append(Vector3(point.x, point.y, point.z))
+
+
         try:
             self.directx.draw_texture(
                 sprite.texture,
-                transform.position.x,
-                transform.position.y,
-                transform.scale.x * sprite.size[0],
-                transform.scale.y * sprite.size[1]
+                p2[0] + transform.position,
+                p2[1] + transform.position,
+                p2[2] + transform.position,
+                p2[3] + transform.position,
             )
 
         except Exception as e:
             log_exception(repr(e))
+
+
+

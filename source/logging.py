@@ -1,15 +1,16 @@
 import logging
 
 logging.basicConfig(
-    format="[%(levelname)s] %(message)s"
+    format="[%(levelname)s] [%(name)s] %(message)s"
 )
 
 log = logging.getLogger("engine")
-log.level = logging.DEBUG
+log.setLevel(logging.DEBUG)
 
 def log_exception(e : Exception):
-    log.error(e)
-
+    log.exception(e)
+    exit(1)
+    
 def log_test(*msg):
     log.debug(*msg)
 

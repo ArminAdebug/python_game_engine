@@ -9,7 +9,8 @@ from source.object.gameobject import GameObject
 from source.systems.system_registery import Registery
 from source.logging import *
 from source.math import (
-    Vector3
+    Vector3,
+    Quaternion
 )
 
 from source.components import (
@@ -73,6 +74,7 @@ class GameEngine:
                 log_exception(repr(e))
 
             timer.start(50)  # 16 : ~60 FPS
+            self.blank_screen()
 
         except Exception as e:
             log_exception(repr(e))
@@ -80,6 +82,7 @@ class GameEngine:
     def check_loop_state(self, timer):
         if not self.loop_state:
             timer.stop()
+
 
     def new_scene(self, name) -> Scene:
         return Scene(name, _SceneKey, self.system_registery)
@@ -101,9 +104,10 @@ class GameEngine:
         player.add_component(sprite2)
         enemy.add_component(sprite1)
 
-        player.get_component(Transform)[0].scale = Vector3(0.1, .1, 1)
-        enemy.get_component(Transform)[0].scale = Vector3(0.1, 0.1, 1)
-        enemy.get_component(Transform)[0].position = Vector3(50, 100, 0)
+        player.transform.scale = Vector3(0.1, .1, 1)
+        enemy.transform.scale = Vector3(0.1, 0.1, 0.1)
+        enemy.transform.position = Vector3(700, 500, 0)
+        enemy.transform.rotate(45, 0, 0)
 
 
         return scene1
