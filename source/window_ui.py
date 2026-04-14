@@ -10,6 +10,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QSize
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -56,6 +57,7 @@ class Ui_MainWindow(object):
         self.fun1.setText(_translate("MainWindow", "PushButton"))
         self.fun2.setText(_translate("MainWindow", "PushButton"))
         self.fun3.setText(_translate("MainWindow", "exit"))
+
 
 def resizeEvent(self, event):
     w = self.width()

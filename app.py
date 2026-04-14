@@ -1,9 +1,6 @@
-from PyQt6.QtGui import QWindow
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QWidget
-from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QApplication
 import sys
 from source.game_engine import *
-
 import source.gui as gui
 
 import faulthandler

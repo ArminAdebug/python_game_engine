@@ -14,7 +14,6 @@ import math
 """
 
 
-
 class RenderSys:
 
     renderables = {
@@ -46,8 +45,11 @@ class RenderSys:
             if self.objects.count(game_object) > 0:
                 self.objects.remove(game_object)
 
-    def is_registered(self, game_object : GameObject) -> bool:
+    def is_registered(self, game_object: GameObject) -> bool:
         return self.objects.count(game_object) > 0
+
+    def init_render(self):
+        pass
 
     def render(self):
         """call in render loop
@@ -60,20 +62,24 @@ class RenderSys:
                         self._render_sprite(component, game_object.transform)
 
     def _render_sprite(self, sprite: Sprite, transform: Transform):
-        quat : Quaternion = transform.rotation
+        if not sprite.visible:
+            return
+
+        quat: Quaternion = transform.rotation
         p1 = (
-        (-sprite.size[0]* transform.scale.x/2 , -sprite.size[1]* transform.scale.y/2, 0),
-        ( +sprite.size[0]* transform.scale.x/2, -sprite.size[1]* transform.scale.y/2, 0),
-        (-sprite.size[0]* transform.scale.x/2, +sprite.size[1]* transform.scale.y/2, 0),
-        ( +sprite.size[0]* transform.scale.x/2, +sprite.size[1]* transform.scale.y/2, 0)
+            (-sprite.size[0] * transform.scale.x/2, -
+             sprite.size[1] * transform.scale.y/2, 0),
+            (+sprite.size[0] * transform.scale.x/2, -
+             sprite.size[1] * transform.scale.y/2, 0),
+            (-sprite.size[0] * transform.scale.x/2, +
+             sprite.size[1] * transform.scale.y/2, 0),
+            (+sprite.size[0] * transform.scale.x/2, +
+             sprite.size[1] * transform.scale.y/2, 0)
         )
-
-
-
 
         p2 = []
 
-        for x,y,z in p1:
+        for x, y, z in p1:
 
             p = Quaternion(
                 x,
@@ -92,10 +98,9 @@ class RenderSys:
             point = quat * p * q_conjugate
             p2.append(Vector3(point.x, point.y, point.z))
 
-
         try:
             self.directx.draw_texture(
-                sprite.texture,
+                sprite.texture.texture,
                 p2[0] + transform.position,
                 p2[1] + transform.position,
                 p2[2] + transform.position,
@@ -104,6 +109,3 @@ class RenderSys:
 
         except Exception as e:
             log_exception(repr(e))
-
-
-

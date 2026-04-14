@@ -12,17 +12,19 @@ if TYPE_CHECKING:
 
 from ctypes import Structure, c_float, byref
 
+
 class Vector3(Structure):
 
     _fields_ = [
 
-    ("x", c_float),
+        ("x", c_float),
 
-    ("y", c_float),
+        ("y", c_float),
 
-    ("z", c_float)
+        ("z", c_float)
 
-]
+    ]
+
 
 class DirectX:
     def __init__(self, hwnd):
@@ -56,7 +58,6 @@ class DirectX:
             raise OSError(f"DX init failed: {self.hr}")
 
         self.init_texture()
-
 
     def begin(self):
         self.dx9.begin_scene()
@@ -155,10 +156,10 @@ class DirectX:
 
     # -------------------------
     def draw_texture(self, tex,
-                    position0 : "V3",
-                    position1 : "V3",
-                    position2 : "V3",
-                    position3 : "V3"):
+                     position0: "V3",
+                     position1: "V3",
+                     position2: "V3",
+                     position3: "V3"):
 
         try:
             self.dx9.draw_texture_rect(

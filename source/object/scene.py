@@ -5,6 +5,7 @@ from source.components import Component
 from source.systems.system_registery import Registery
 from source.object.gameobject import _game_object_key
 
+
 class Scene:
     """
     note: dont make scene like this:
@@ -13,8 +14,7 @@ class Scene:
     GameEngine.new_scene(name)
     """
 
-
-    def __init__(self, name, key, system_registery : Registery):
+    def __init__(self, name, key, system_registery: Registery):
         self.name = name
 
         if key != _SceneKey:

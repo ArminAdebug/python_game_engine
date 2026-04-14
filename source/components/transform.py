@@ -1,7 +1,6 @@
 from source.components.component import Component
 from typing import *
-from source.math.vector3 import Vector3
-from source.math.quaternion import Quaternion
+from source.math import Vector3, Quaternion
 
 
 class Transform(Component):

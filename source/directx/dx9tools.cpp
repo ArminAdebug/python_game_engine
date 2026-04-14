@@ -18,8 +18,6 @@ void log()
 }
 // --- Globals ---
 
-
-
 static IDirect3D9 *g_d3d = nullptr;
 static IDirect3DDevice9 *g_dev = nullptr;
 
@@ -60,16 +58,14 @@ static D3DCOLOR to_d3dcolor(uint32_t argb)
 
 struct Vertex
 {
-    float x,y,z,rhw;
-    float u,v;
+    float x, y, z, rhw;
+    float u, v;
 };
-
-
 
 // --- C API ---
 extern "C"
 {
-    void PrintHR(const char* msg, HRESULT hr)
+    void PrintHR(const char *msg, HRESULT hr)
     {
         std::cout << msg << hr << "\n";
     }
@@ -175,10 +171,10 @@ extern "C"
         int width,
         int height,
         int pitchBytes)
+    {
+
+        if (!g_dev || !pixels)
         {
-
-
-        if (!g_dev || !pixels){
             std::cout << "device or pixels is null\n";
             return nullptr;
         }
@@ -195,7 +191,8 @@ extern "C"
             &tex,
             NULL);
 
-        if (FAILED(hr) || !tex){
+        if (FAILED(hr) || !tex)
+        {
             PrintHR("bad input texture", hr);
             return nullptr;
         }
@@ -203,7 +200,8 @@ extern "C"
         D3DLOCKED_RECT lr;
         hr = tex->LockRect(0, &lr, nullptr, 0);
 
-        if (FAILED(hr)){
+        if (FAILED(hr))
+        {
             PrintHR("locking rect failed", hr);
             return nullptr;
         }
@@ -222,15 +220,16 @@ extern "C"
         }
 
         hr = tex->UnlockRect(0);
-        if (!tex){
+        if (!tex)
+        {
             PrintHR("texture pointer is null", hr);
 
             return nullptr;
         }
         std::cout << "width=" << width
-                << " height=" << height
-                << " pitch=" << pitchBytes
-                << std::endl;
+                  << " height=" << height
+                  << " pitch=" << pitchBytes
+                  << std::endl;
 
         return tex;
     }
@@ -246,42 +245,38 @@ extern "C"
         float x3, float y3, float z3)
     {
 
-    if(!tex){
-        std::cout << "texture null\n";
-        return;
+        if (!tex)
+        {
+            std::cout << "texture null\n";
+            return;
+        }
+
+        Vertex quad[4];
+
+        quad[0] = {x0, y0, z0, 1, 0, 0};
+        quad[1] = {x1, y1, z1, 1, 1, 0};
+        quad[2] = {x2, y2, z2, 1, 0, 1};
+        quad[3] = {x3, y3, z3, 1, 1, 1};
+
+        g_dev->SetFVF(FVF);
+
+        g_dev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+        g_dev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+
+        g_dev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+        g_dev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        g_dev->SetTexture(0, tex);
+
+        HRESULT hr = g_dev->DrawPrimitiveUP(
+            D3DPT_TRIANGLESTRIP,
+            2,
+            quad,
+            sizeof(Vertex));
+
+        if (FAILED(hr))
+        {
+            PrintHR("rendering failed", hr);
+            return;
+        }
     }
-
-    Vertex quad[4];
-
-    quad[0] = {x0, y0, z0, 1, 0, 0};
-    quad[1] = {x1, y1, z1, 1, 1, 0};
-    quad[2] = {x2, y2, z2, 1, 0, 1};
-    quad[3] = {x3, y3, z3, 1, 1, 1};
-
-    g_dev->SetFVF(FVF);
-
-    g_dev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-    g_dev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-
-
-    g_dev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-    g_dev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-    g_dev->SetTexture(0, tex);
-
-    HRESULT hr = g_dev->DrawPrimitiveUP(
-        D3DPT_TRIANGLESTRIP,
-        2,
-        quad,
-        sizeof(Vertex)
-    );
-
-    if (FAILED(hr)){
-        PrintHR("rendering failed", hr);
-        return;
-    }
-
-
 }
-
-}
-

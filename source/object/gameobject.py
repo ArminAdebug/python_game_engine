@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from source.object.scene import Scene
 
+
 class GameObject:
     """
     note: dont make object like this:
@@ -33,7 +34,7 @@ class GameObject:
         self.transform = Transform()
         self.components.append(self.transform)
 
-    def add_component(self, component : Component):
+    def add_component(self, component: Component):
         if not isinstance(component, Component):
             raise TypeError("add_component expect a Component.")
 
@@ -41,12 +42,11 @@ class GameObject:
             raise TypeError(
                 "GameObject only can have one Transform component.")
 
-
         component.game_object = self
         self.components.append(component)
         self.scene.system_registery.update(component)
 
-    def get_component(self, component_type : Component) -> list[Component]:
+    def get_component(self, component_type: Component) -> list[Component]:
 
         founds = []
 
@@ -80,5 +80,6 @@ class GameObject:
 
     def __str__(self):
         return f"""{self.name}:\n{self.components}"""
+
 
 _game_object_key = type("_GameObjectKey", (), {})

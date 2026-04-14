@@ -3,32 +3,26 @@ from typing import *
 import os
 import numpy as np
 from PIL import Image
+from source.asset.texture import Texture
 
 
 class Sprite(Component):
     type = "sprite"
 
-    def __init__(self, image_file_path, directx):
+    def __init__(self, texture: Texture):
         super().__init__()
-        if not os.path.exists(image_file_path):
-            raise FileNotFoundError(f"file {image_file_path} doesn's exists.")
 
-        self.image = Image.open(image_file_path).convert("RGBA")
-        self.size = self.image.size
+        if not isinstance(texture, Texture):
+            raise TypeError(f"Sprite needs an Texture from AssetManager not <{texture.__class__.__name__}>.")
 
-        self.bgra_array = self._convert2argb()
+        self.texture = texture
+        self.size = texture.size
+        self.mode = texture.image_mode
 
-        self.texture = directx.create_texture_from_argb(
-            self.bgra_array
-        )
+        self.visible = True
 
-    def _convert2argb(self):
-        rgba = np.array(self.image, dtype=np.uint8)
-        # bgra = rgba[:, :, [0,3,2,1]]  # swap R and B
-        r = rgba[::, ::, 0]
-        g = rgba[::, ::, 1]
-        b = rgba[::, ::, 2]
-        a = rgba[::, ::, 3]
+    def flip_vertical(self):
+        pass
 
-        bgra = np.stack((b, g, r, a), axis=-1)
-        return bgra
+    def flip_horizenal(self):
+        pass

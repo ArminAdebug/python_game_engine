@@ -1,7 +1,9 @@
 import math
 from source.logging import *
+
+
 class Vector3:
-    def __init__(self, x : float, y : float, z : float):
+    def __init__(self, x: float, y: float, z: float):
         self.x = x
         self.y = y
         self.z = z
@@ -33,7 +35,8 @@ class Vector3:
 
     def __mul__(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(f"unsupported operand type(s) for *: 'Vector3' and '{type(value).__name__}'")
+            raise TypeError(
+                f"unsupported operand type(s) for *: 'Vector3' and '{type(value).__name__}'")
 
         return Vector3(
             self.x * value,
@@ -65,10 +68,11 @@ class Vector3:
         """
         return Vector3(0, 0, 0)
 
+
 # test
 if __name__ == "__main__":
-    a = Vector3(1,2,3)
-    b = Vector3(4,5,6)
+    a = Vector3(1, 2, 3)
+    b = Vector3(4, 5, 6)
 
     log_info(a + b)       # جمع
     log_info(a - b)       # تفریق
