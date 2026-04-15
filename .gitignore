@@ -1,0 +1,110 @@
+:::writing
+================================
+Game Engine Project .gitignore
+Python + C++ + DirectX + PyQt
+================================
+-------- Python Cache --------
+
+pycache/
+
+*.py[cod]
+
+*$py.class
+-------- Python Virtual Env --------
+
+.venv/
+
+venv/
+
+env/
+
+ENV/
+-------- Python Build --------
+
+build/
+
+dist/
+
+*.egg-info/
+
+.eggs/
+-------- Logs --------
+
+*.log
+-------- IDE / Editor --------
+
+.vscode/
+
+.idea/
+
+*.sublime-project
+
+*.sublime-workspace
+-------- OS Files --------
+
+.DS_Store
+
+Thumbs.db
+-------- C++ Build Artifacts --------
+
+*.obj
+
+*.o
+
+*.lo
+
+*.slo
+
+*.pch
+
+*.ilk
+
+*.pdb
+-------- Visual Studio --------
+
+*.vcxproj.user
+
+*.vcxproj.filters
+
+*.suo
+-------- DLL / Library Builds --------
+
+*.dll
+
+*.lib
+
+*.exp
+-------- Executables --------
+
+*.exe
+
+*.out
+-------- Temporary / Test Files --------
+
+test_build/
+
+temp/
+
+tmp/
+-------- Qt UI Generated Files --------
+
+*_ui.py
+-------- Python Compiled Extensions --------
+
+*.pyd
+-------- Coverage / Testing --------
+
+.coverage
+
+htmlcov/
+
+.pytest_cache/
+-------- Misc --------
+
+*.bak
+
+*.tmp
+
+*.cache
+
+:::

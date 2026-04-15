@@ -5,8 +5,14 @@ from source.components import *
 from source.math import *
 
 from api.script_behaviour import ScriptBehaviour
-from api.api_wrapper import EngineWrapper
+from api.api_wrapper import Wrapper
 from source.asset.asset_manager import AssetManager
+from typing import *
 
-asset_manager : AssetManager = EngineWrapper.engine.asset_manager
-new_scene = EngineWrapper.engine.new_scene
+if TYPE_CHECKING:
+    from source.game_engine import GameEngine
+    from source.systems.script_sys import FrameInfo
+
+asset_manager : AssetManager = Wrapper.engine.asset_manager
+frame_info : "FrameInfo" = Wrapper.frame_info
+new_scene = Wrapper.engine.new_scene

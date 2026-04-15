@@ -61,7 +61,7 @@ class ScriptSys:
 
     def render(self, frame_info: "FrameInfo"):
         for objects in self.objects:
-            objects.update
+            objects.update()
 
 
 class FrameInfo:
@@ -72,6 +72,7 @@ class FrameInfo:
     * last_time : last frame time setted
     * frames : frames count (can be used for index)
     * delta_time : each frames delta time
+    * fps : game fps
     """
 
     def __init__(self):
@@ -80,9 +81,12 @@ class FrameInfo:
         self.last_time = self.start_time
         self.frames = 0
         self.delta_time = 1
+        self.fps = 0
 
     def update(self):
-        self.delta_time = time.perf_counter() - self.last_time
-        self.last_time = time.perf_counter()
+        now = time.perf_counter()
+        self.delta_time = now - self.last_time
+        self.fps =  1 / self.delta_time
+        self.last_time = now
         self.total_time = self.last_time - self.start_time
         self.frames += 1

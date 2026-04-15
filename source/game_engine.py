@@ -24,7 +24,7 @@ from source.systems import (
     ScriptSys,
     script_sys
 )
-from api.api_wrapper import EngineWrapper
+from api.api_wrapper import Wrapper
 
 
 class GameEngine:
@@ -51,7 +51,8 @@ class GameEngine:
         # test
         self.test()
 
-        EngineWrapper.engine = self
+        Wrapper.engine = self
+
 
     def blank_screen(self):
         self.directx.clear_color(0xFF000000)
@@ -63,6 +64,7 @@ class GameEngine:
         try:
 
             frame_info = script_sys.FrameInfo()
+            Wrapper.frame_info = frame_info
 
             self.loop_state = True
 
@@ -82,7 +84,7 @@ class GameEngine:
             self.system_dict["ScriptSys"].init_render()
             self.system_dict["RenderSys"].init_render()
 
-            timer.start(50)  # 16 : ~60 FPS
+            timer.start(1)  # 16 : ~60 FPS
             self.blank_screen()
 
         except Exception as e:
@@ -130,6 +132,9 @@ class GameEngine:
 
             self.directx.end()
             self.directx.present()
+
+            frame_info.update()
+            Wrapper.frame_info = frame_info
 
         except Exception as e:
             log_exception(repr(e))

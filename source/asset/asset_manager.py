@@ -16,7 +16,7 @@ class AssetManager:
     def __init__(self, directx : "DirectX"):
         self.directx = directx
 
-    def lead_image(self, file_path: Path | str) -> tuple[int, tuple[int, int]]:
+    def load_image(self, file_path: Path | str) -> tuple[int, tuple[int, int]]:
         """
 
         Args:
