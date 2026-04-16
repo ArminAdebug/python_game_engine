@@ -166,7 +166,7 @@ extern "C"
     // ------------------------------------------------
     __declspec(dllexport)
     IDirect3DTexture9 *
-    create_texture_argb(
+    create_texture_grba(
         const uint8_t *pixels,
         int width,
         int height,

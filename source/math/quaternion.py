@@ -2,16 +2,27 @@ import math
 
 
 class Quaternion:
-    def __init__(self, x=0, y=0, z=0, w=1):
+    def __init__(self, x: int = 0, y: int = 0, z: int = 0, w: int = 1):
+        """making new Quaternion
+
+        Args:
+            x (int, optional): _description_. Defaults to 0.
+            y (int, optional): _description_. Defaults to 0.
+            z (int, optional): _description_. Defaults to 0.
+            w (int, optional): _description_. Defaults to 1.
+        """
         self.x = x
         self.y = y
         self.z = z
         self.w = w
 
     def __repr__(self):
+        """
+        used for logging and debuging.
+        """
         return f"Quaternion({self.x}, {self.y}, {self.z}, {self.w})"
 
-    def __mul__(self, other):
+    def __mul__(self, other : "Quaternion") -> "Quaternion":
         if not isinstance(other, Quaternion):
             raise TypeError(
                 f"unsupported operand type(s) for *: 'Quaternion' and '{type(other).__name__}'"
@@ -25,7 +36,18 @@ class Quaternion:
         return Quaternion(x, y, z, w)
 
     @staticmethod
-    def euler(x, y, z):
+    def euler(x : int, y : int, z: int) -> "Quaternion":
+        """returns a Quaternion from Euler Anglse
+
+        Args:
+            x (int): x rotation
+            y (int): y rotation
+            z (int): z rotation
+
+        Returns:
+            Quaternion: Quaternion from Euler Angles
+        """
+
         # convert degrees to radians
         x = math.radians(x)
         y = math.radians(y)

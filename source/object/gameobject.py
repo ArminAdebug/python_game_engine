@@ -1,8 +1,11 @@
 from __future__ import annotations
-from source.components import *
-
-
 from typing import TYPE_CHECKING
+
+from source.components import (
+    Component,
+    Transform,
+)
+
 
 if TYPE_CHECKING:
     from source.object.scene import Scene
@@ -66,7 +69,7 @@ class GameObject:
             if type(component) == type(component_target):
                 self.components.remove(component)
 
-        self.scene.system_registery.update(component)
+        self.scene.system_registery.update(component_target)
 
     def all_components(self) -> list[Component]:
         """
@@ -82,4 +85,6 @@ class GameObject:
         return f"""{self.name}:\n{self.components}"""
 
 
-_game_object_key = type("_GameObjectKey", (), {})
+# key for making GameObject
+_game_object_key = type("_GameObjectKey", (), {}
+                        )  # pylint: disable=C0103, too-few-public-methods

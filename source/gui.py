@@ -1,11 +1,23 @@
-from PyQt6.QtGui import QWindow
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QWidget, QMainWindow
-from source.window_ui import Ui_MainWindow
+# pylint: disable=no-name-in-module
+
 from PyQt6.QtCore import QTimer
+from PyQt6.QtGui import QWindow
+from PyQt6.QtWidgets import QVBoxLayout, QWidget, QMainWindow
+
+from source.window_ui import Ui_MainWindow
 
 
 class Window(QMainWindow):
-    def __init__(self, directx_hwnd):
+    """app main window and GUI
+    """
+
+    def __init__(self, directx_hwnd: int):
+        """setup app GUI
+
+        Args:
+            directx_hwnd (int): pointer of an raw window
+        """
+
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)

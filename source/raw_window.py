@@ -1,9 +1,21 @@
+"""
+module with raw Window for each platform to atach Directx
+
+Raises:
+    WindowsError: error from windows while making window
+
+"""
 import ctypes
-from ctypes import wintypes
 
 
 class Window:
+    """raw window for Windows platform
 
+    Raises:
+        WindowsError: error from windows while making window
+    """
+
+    # setup static vars
     WS_VISIBLE = 0x10000000
     WS_POPUP = 0x80000000
 
@@ -27,8 +39,19 @@ class Window:
         if not self.hwnd:
             raise WindowsError("can't create window")
 
-    def change_size(self, width, height):
+    def change_size(self, width : int, height : int):
+        """change window size in process
+
+        Args:
+            width (int): new Width for window
+            height (int): new Height for window
+        """
         Window.user32.SetWindowPos(self.hwnd, 0, 0, 0, width, height, 0x0002)
 
-    def get_hwnd(self):
+    def get_hwnd(self) -> int:
+        """method to get window HWND
+
+        Returns:
+            int: HWND pointer address
+        """
         return self.hwnd

@@ -1,11 +1,18 @@
-from pathlib import Path
+"""asset managing and io tools
 
+Raises:
+    FileNotFoundError: if file does not exists returns an Exception
+
+Returns:
+    Texture: returns an image Texture.
+"""
+from pathlib import Path
 from typing import TYPE_CHECKING
-from source.components import Component
-from typing import *
 import os
+
 import numpy as np
 from PIL import Image
+
 from source.asset.texture import Texture
 
 if TYPE_CHECKING:
@@ -13,7 +20,12 @@ if TYPE_CHECKING:
 
 
 class AssetManager:
-    def __init__(self, directx : "DirectX"):
+    """tools for load and save and change Assets
+    """
+
+    def __init__(self, directx: "DirectX"):
+        """setup values"""
+
         self.directx = directx
 
     def load_image(self, file_path: Path | str) -> tuple[int, tuple[int, int]]:
@@ -38,12 +50,12 @@ class AssetManager:
 
         bgra_array = self._convert2argb(image)
 
-        texture: int = self.directx.create_texture_from_argb(
+        texture: int = self.directx.create_texture_from_grba(
             bgra_array
         )
         return Texture(texture, size, path=file_path, image_mode=image_format)
 
-    def _convert2argb(self, image):
+    def _convert2argb(self, image : Image.Image) -> np.typing.ArrayLike:
         rgba = np.array(image, dtype=np.uint8)
         # bgra = rgba[:, :, [0,3,2,1]]  # swap R and B
         r = rgba[::, ::, 0]

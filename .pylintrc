@@ -1,0 +1,3 @@
+[MASTER]
+ignored-modules=PyQt6,PyQt6.QtCore,PyQt6.QtGui,PyQt6.QtWidgets
+disable=E0611

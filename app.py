@@ -1,12 +1,22 @@
-from PyQt6.QtWidgets import QApplication
-import sys
-from source.game_engine import *
-import source.gui as gui
+"""main app for starting app
+"""
+# pylint: disable=no-name-in-module
 
+import sys
 import faulthandler
+
+from PyQt6.QtWidgets import QApplication
+
+from source import gui
+from source.game_engine import GameEngine
+
+
 faulthandler.enable()
 
+
 def main():
+    """main function to start program
+    """
     app = QApplication(sys.argv)
 
     game_engine = GameEngine()

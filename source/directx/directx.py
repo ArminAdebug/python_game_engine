@@ -1,42 +1,44 @@
 import ctypes
 import numpy as np
-from source.logging import *
-
+from source.logging import Logger
+from pathlib import Path
 from typing import TYPE_CHECKING
+import os
 
 if TYPE_CHECKING:
-    from source.components import Transform
-    from source.math import Quaternion, Vector3
-    from source.math import Vector3 as V3
-
-
-from ctypes import Structure, c_float, byref
-
-
-class Vector3(Structure):
-
-    _fields_ = [
-
-        ("x", c_float),
-
-        ("y", c_float),
-
-        ("z", c_float)
-
-    ]
+    from source.math import Vector3
 
 
 class DirectX:
-    def __init__(self, hwnd):
+    dll_path = str(Path(r".\source\directx\dxtools.dll").absolute())
+
+    def __init__(self, hwnd: int):
+        """create directx wrapper
+
+        Args:
+            hwnd (int): an raw window poinet to draw
+
+        Raises:
+            OSError: if init failed
+        """
         try:
+            if not os.path.exists(__class__.dll_path):
+                Logger.log_error(f"file {__class__.dll_path} does not exists")
+
             self.dx9 = ctypes.WinDLL(
-                r"F:\docc\armin\+Dev\Code\Python\3d test\w\source\directx\dxtools.dll")
+                __class__.dll_path
+            )
 
             self.dx9.init_d3d9.argtypes = [ctypes.c_void_p]
             self.dx9.init_d3d9.restype = ctypes.c_long
 
-        except Exception as e:
-            log_exception(repr(e))
+        except (FileExistsError,
+                OSError,
+                FileExistsError,
+                ctypes.ArgumentError,
+                ) as e:
+
+            Logger.log_exception(repr(e))
 
         self.dx9.clear_color.argtypes = [ctypes.c_uint32]
         self.dx9.present.argtypes = []
@@ -66,14 +68,17 @@ class DirectX:
         self.dx9.end_scene()
 
     def init_texture(self):
+        """setup texture setting
+        """
+
         try:
-            self.dx9.create_texture_argb.argtypes = [
+            self.dx9.create_texture_grba.argtypes = [
                 ctypes.c_void_p,
                 ctypes.c_int,
                 ctypes.c_int,
                 ctypes.c_int
             ]
-            self.dx9.create_texture_argb.restype = ctypes.c_void_p
+            self.dx9.create_texture_grba.restype = ctypes.c_void_p
 
             self.dx9.draw_texture_rect.argtypes = [
                 ctypes.c_void_p,
@@ -91,10 +96,17 @@ class DirectX:
                 ctypes.c_float,
             ]
         except Exception as e:
-            log_exception(repr(e))
+            Logger.log_exception(repr(e))
 
-    def clear_color(self, color):
+    def clear_color(self, color: int):
+        """clear color with a color.
 
+        Args:
+            color (int): rgb hex color.
+
+        Raises:
+            OSError: if init was failed.
+        """
         if self.hr != 0:
             raise OSError(f"init failed: {self.hr:#x}")
 
@@ -105,15 +117,15 @@ class DirectX:
                   y: int,
                   w: int,
                   h: int,
-                  color):
-        """_summary_
+                  color: int):
+        """draws a rect with position and size and color
 
         Args:
             x (int): rect x position
             y (int): rect y position
             w (int): rect width
             h (int): rect height
-            color (_type_): rect color
+            color (int): rect hex color
 
         Raises:
             OSError: if directx init failed
@@ -125,11 +137,6 @@ class DirectX:
         self.dx9.fill_rect(x, y, w, h, color)
 
     # -------------------------
-
-    def clear(self, color):
-        self.dx9.clear_color(color)
-
-    # -------------------------
     def present(self):
         self.dx9.present()
 
@@ -138,28 +145,52 @@ class DirectX:
         self.dx9.shutdown_d3d9()
 
     # -------------------------
-    def create_texture_from_argb(self, argb_2d: np.ndarray):
-        if argb_2d.dtype != np.uint8:
-            raise TypeError("expected uint32 ARGB data")
+    def create_texture_from_grba(self, grba_2d: np.ndarray) -> int:
+        """creates texture from numpy array grba.
 
-        h, w, c = argb_2d.shape
-        pitch = argb_2d.strides[0]
+        Args:
+            grba_2d (np.ndarray): numpy array from image mode grba
 
-        ptr = self.dx9.create_texture_argb(
-            ctypes.c_void_p(argb_2d.ctypes.data),
+        Raises:
+            TypeError: if numpy type was Wrong
+            RuntimeError: if texture creation failed
+
+        Returns:
+            int: pointer to texture
+        """
+        if grba_2d.dtype != np.uint8:
+            raise TypeError("expected uint8 grba data")
+
+        h, w, _ = grba_2d.shape
+        pitch = grba_2d.strides[0]
+
+        ptr = self.dx9.create_texture_grba(
+            ctypes.c_void_p(grba_2d.ctypes.data),
             w, h, pitch
         )
+
         if not ptr:
             raise RuntimeError(f"texture creation failed {ptr=}")
 
         return ptr
 
     # -------------------------
-    def draw_texture(self, tex,
-                     position0: "V3",
-                     position1: "V3",
-                     position2: "V3",
-                     position3: "V3"):
+    def draw_texture(self,
+                     tex: int,
+                     position0: "Vector3",
+                     position1: "Vector3",
+                     position2: "Vector3",
+                     position3: "Vector3"
+                     ):
+        """draws an texture on screen
+
+        Args:
+            tex (int): texture pointer
+            position0 (Vector3): vertex 1 position
+            position1 (Vector3): vertex 2 position
+            position2 (Vector3): vertex 3 position
+            position3 (Vector3): vertex 4 position
+        """
 
         try:
             self.dx9.draw_texture_rect(
@@ -169,5 +200,5 @@ class DirectX:
                 position2.x, position2.y, position2.z,
                 position3.x, position3.y, position3.z
             )
-        except Exception as e:
-            log_exception(repr(e))
+        except (ctypes.ArgumentError, OSError, WindowsError) as e:
+            Logger.log_exception(repr(e))

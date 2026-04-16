@@ -1,12 +1,17 @@
-from source.components.component import Component
+"""component for user Scripting"""
 import os
 from pathlib import Path
 
+from source.components.component import Component
+
 
 class Script(Component):
+    """component for user Scripting"""
     type = "script"
 
     def __init__(self, file_path: Path | str):
+        """setup code file path"""
+        
         super().__init__()
 
         if not os.path.exists(file_path):

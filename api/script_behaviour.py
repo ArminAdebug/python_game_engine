@@ -1,21 +1,26 @@
+"""Behaviour class for user code class
+"""
 from source.components import (
-    Component,
     Script,
     Transform
 )
 
 from source.object.gameobject import GameObject
-from typing import *
 
 
 class ScriptBehaviour:
+    """Behaviour class for user code class.
+    """
+
     def __init__(self):
         self.this: Script | None = None
         self.game_object: GameObject | None = None
         self.transform: Transform | None = None
 
-    def start():
-        pass
+    def start(self):
+        """runs at game startup
+        """
 
-    def update():
-        pass
+    def update(self):
+        """runs on game loop
+        """

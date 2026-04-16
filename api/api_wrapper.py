@@ -1,7 +1,7 @@
 """
 wraps engine commands without circle import.
 """
-from typing import *
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from source.game_engine import GameEngine

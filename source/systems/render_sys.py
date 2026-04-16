@@ -1,17 +1,8 @@
 from source.object.gameobject import GameObject
 from source.directx.directx import DirectX
-from source.logging import *
+from source.logging import Logger
 from source.math import Quaternion, Vector3
-from source.components import Transform, Sprite, Component
-import math
-
-"""
-    InputSystem
-    ScriptSystem
-    AnimationSystem
-    PhysicsSystem
-    RenderSystem
-"""
+from source.components import Transform, Sprite
 
 
 class RenderSys:
@@ -29,7 +20,7 @@ class RenderSys:
             raise TypeError(
                 f"render system expected a game object: <{game_object.__class__.__name__}>")
 
-        if not __class__.renderables & set([type(component) for component in game_object.all_components()]):
+        if not any(type(c) in __class__.renderables for c in game_object.all_components()):
             raise ValueError(
                 "render system expected at least one renderable component.")
 
@@ -41,7 +32,8 @@ class RenderSys:
             raise TypeError(
                 f"render system expected a game object: <{game_object.__class__.__name__}>")
 
-        if not __class__.renderables & set([type(component) for component in game_object.all_components()]):
+        if not any(type(c) in __class__.renderables for c in game_object.all_components()):
+
             if self.objects.count(game_object) > 0:
                 self.objects.remove(game_object)
 
@@ -62,6 +54,13 @@ class RenderSys:
                         self._render_sprite(component, game_object.transform)
 
     def _render_sprite(self, sprite: Sprite, transform: Transform):
+        """render sprite on screen with game object transform
+
+        Args:
+            sprite (Sprite): sprite component
+            transform (Transform): game object transform
+        """
+
         if not sprite.visible:
             return
 
@@ -108,4 +107,4 @@ class RenderSys:
             )
 
         except Exception as e:
-            log_exception(repr(e))
+            Logger.log_exception(repr(e))
