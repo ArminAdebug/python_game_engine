@@ -2,7 +2,7 @@
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QWindow
-from PyQt6.QtWidgets import QVBoxLayout, QWidget, QMainWindow
+from PyQt6.QtWidgets import QVBoxLayout, QWidget, QMainWindow, QMenu, QLayout
 
 from source.window_ui import Ui_MainWindow
 
@@ -26,14 +26,35 @@ class Window(QMainWindow):
 
         directx_window = QWindow.fromWinId(directx_hwnd)
 
-        # ساخت container
         container = QWidget.createWindowContainer(directx_window)
 
-        # layout روی widget داخل UI
-        layout = QVBoxLayout(self.ui.widget)
+        layout = QVBoxLayout(self.ui.screen)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(container)
 
         self.timer = QTimer()
 
         self.show()
+        self.setupAddComponent()
+
+    def setupAddComponent(self):
+        """connecting button to components list
+        """
+        menu = QMenu(self)
+
+        # اضافه کردن کامپوننت‌ها
+        menu.addAction("Transform")
+        menu.addAction("Mesh Renderer")
+        menu.addAction("Box Collider")
+        menu.addAction("Rigidbody")
+
+        #self.ui.clicked.connect(
+        #    lambda: menu.exec(
+        #        self.btnAddComponent.mapToGlobal(
+        #            self.btnAddComponent.rect().bottomLeft()
+        #        )
+        #    )
+        #)
+
+    def _delete_layout(self, layout : QLayout):
+        layout.deleteLater()

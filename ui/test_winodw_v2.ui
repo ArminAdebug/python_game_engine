@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>893</width>
+    <height>625</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* =========================
+   GLOBAL
+   ========================= */
+
+* {
+    transition: all 120ms ease-in-out;
+}
+
+QWidget {
+    background-color: #1F2227; /* تیره‌تر */
+    color: #E0E3E7;
+    font-family: &quot;Segoe UI&quot;, &quot;Roboto&quot;, &quot;IRANSans&quot;, sans-serif;
+    font-size: 13px;
+}
+
+/* مرز عمومی برای هر ویجت */
+QWidget {
+    border: 1px solid #5B626E; /* مرز روشن‌تر و کاملاً مشخص */
+}
+
+/* =========================
+   MAIN WINDOW
+   ========================= */
+
+QMainWindow {
+    background-color: #1F2227;
+    border: 1px solid #6A7280; /* روشن‌تر از بقیه برای تاکید */
+}
+
+/* =========================
+   DOCK WIDGETS
+   ========================= */
+
+QDockWidget {
+    background-color: #24272D;
+    border: 1px solid #70798A; /* مرز خیلی واضح */
+}
+
+QDockWidget::title {
+    background-color: #2A2D34;
+    padding: 6px 8px;
+    border-bottom: 1px solid #787F92;
+    color: #DDE2EB;
+    font-weight: 600;
+}
+
+/* =========================
+   PANELS / FRAMES / GROUPBOX
+   ========================= */
+
+QFrame {
+    background-color: #262A31;
+    border: 1px solid #7A8290; /* بسیار واضح */
+    border-radius: 4px;
+}
+
+QGroupBox {
+    background-color: #262A31;
+    border: 1px solid #7A8290; /* واضح */
+    border-radius: 6px;
+    margin-top: 18px;
+    padding: 6px;
+}
+
+QGroupBox::title {
+    background-color: #262A31;
+    padding: 0 4px;
+    left: 10px;
+    color: #C6CBD4;
+}
+
+/* =========================
+   INPUTS (LineEdit, SpinBox…)
+   ========================= */
+
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QComboBox,
+QTextEdit,
+QPlainTextEdit {
+    background-color: #1C1F24;
+    border: 1px solid #858D9D; /* مرز کاملاً مشخص */
+    border-radius: 4px;
+    padding: 4px 6px;
+}
+
+QLineEdit:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus,
+QComboBox:focus,
+QTextEdit:focus,
+QPlainTextEdit:focus {
+    border: 1px solid #4C8DFF !important;
+    background-color: #20242B;
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+QPushButton,
+QToolButton {
+    background-color: #2F343C;
+    border: 1px solid #8891A3; /* مرز کاملاً واضح */
+    border-radius: 4px;
+    padding: 5px 12px;
+    color: #E6E9EF;
+}
+
+QPushButton:hover,
+QToolButton:hover {
+    background-color: #3A404A;
+    border: 1px solid #A0A8B8;
+}
+
+QPushButton:pressed,
+QToolButton:pressed {
+    background-color: #2A2F36;
+    border: 1px solid #7A8290;
+}
+
+QPushButton#dangerButton {
+    background-color: #54313A;
+    border-color: #B06273;
+}
+
+/* =========================
+   TREE / LIST
+   ========================= */
+
+QTreeWidget,
+QListWidget,
+QTreeView,
+QListView {
+    background-color: #22262C;
+    border: 1px solid #7E8797; /* مرز قوی */
+}
+
+QTreeWidget::item:selected,
+QListWidget::item:selected {
+    background-color: #4C8DFF;
+    color: #FFFFFF;
+}
+
+/* =========================
+   TAB WIDGET
+   ========================= */
+
+QTabWidget::pane {
+    border: 1px solid #7E8797;
+    background-color: #22262C;
+}
+
+QTabBar::tab {
+    background-color: #2B2F36;
+    border: 1px solid #9099AB;
+    padding: 5px 12px;
+}
+
+QTabBar::tab:selected {
+    background-color: #323841;
+    border-color: #4C8DFF;
+}
+
+/* =========================
+   STATUSBAR
+   ========================= */
+
+QStatusBar {
+    background-color: #252931;
+    border-top: 1px solid #6F7787;
+}
+
+/* =========================
+   LOG CONSOLE
+   ========================= */
+
+QPlainTextEdit#logConsole {
+    background-color: #1A1C20;
+    border: 1px solid #8C95A8; /* بسیار روشن و مشخص */
+    font-family: &quot;Consolas&quot;, &quot;Fira Code&quot;, monospace;
+    font-size: 12px;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Play</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="text">
+           <string>Pause</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QWidget" name="screen" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>192</horstretch>
+          <verstretch>108</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QDockWidget" name="asset_dock">
+   <property name="windowTitle">
+    <string>Asset</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QTreeView" name="asset_tree_view"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="inspector_dock">
+   <property name="minimumSize">
+    <size>
+     <width>303</width>
+     <height>165</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Inspector</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_3"/>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="hierarchy_dock">
+   <property name="windowTitle">
+    <string>Hierarchy</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QListWidget" name="scene_list_view"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="tools_dock">
+   <property name="windowTitle">
+    <string>Tools</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_6">
+    <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <item>
+      <widget class="QPushButton" name="move_tool_button">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Move Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="rotation_tool_button">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Rotation Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="size_tool_button">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Size Tool</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>pushButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

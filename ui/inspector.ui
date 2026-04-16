@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* =========================
+   GLOBAL
+   ========================= */
+
+* {
+    transition: all 120ms ease-in-out;
+}
+
+QWidget {
+    background-color: #1F2227; /* تیره‌تر */
+    color: #E0E3E7;
+    font-family: &quot;Segoe UI&quot;, &quot;Roboto&quot;, &quot;IRANSans&quot;, sans-serif;
+    font-size: 13px;
+}
+
+/* مرز عمومی برای هر ویجت */
+QWidget {
+    border: 1px solid #5B626E; /* مرز روشن‌تر و کاملاً مشخص */
+}
+
+/* =========================
+   MAIN WINDOW
+   ========================= */
+
+QMainWindow {
+    background-color: #1F2227;
+    border: 1px solid #6A7280; /* روشن‌تر از بقیه برای تاکید */
+}
+
+/* =========================
+   DOCK WIDGETS
+   ========================= */
+
+QDockWidget {
+    background-color: #24272D;
+    border: 1px solid #70798A; /* مرز خیلی واضح */
+}
+
+QDockWidget::title {
+    background-color: #2A2D34;
+    padding: 6px 8px;
+    border-bottom: 1px solid #787F92;
+    color: #DDE2EB;
+    font-weight: 600;
+}
+
+/* =========================
+   PANELS / FRAMES / GROUPBOX
+   ========================= */
+
+QFrame {
+    background-color: #262A31;
+    border: 1px solid #7A8290; /* بسیار واضح */
+    border-radius: 4px;
+}
+
+QGroupBox {
+    background-color: #262A31;
+    border: 1px solid #7A8290; /* واضح */
+    border-radius: 6px;
+    margin-top: 18px;
+    padding: 6px;
+}
+
+QGroupBox::title {
+    background-color: #262A31;
+    padding: 0 4px;
+    left: 10px;
+    color: #C6CBD4;
+}
+
+/* =========================
+   INPUTS (LineEdit, SpinBox…)
+   ========================= */
+
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QComboBox,
+QTextEdit,
+QPlainTextEdit {
+    background-color: #1C1F24;
+    border: 1px solid #858D9D; /* مرز کاملاً مشخص */
+    border-radius: 4px;
+    padding: 4px 6px;
+}
+
+QLineEdit:focus,
+QSpinBox:focus,
+QDoubleSpinBox:focus,
+QComboBox:focus,
+QTextEdit:focus,
+QPlainTextEdit:focus {
+    border: 1px solid #4C8DFF !important;
+    background-color: #20242B;
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+QPushButton,
+QToolButton {
+    background-color: #2F343C;
+    border: 1px solid #8891A3; /* مرز کاملاً واضح */
+    border-radius: 4px;
+    padding: 5px 12px;
+    color: #E6E9EF;
+}
+
+QPushButton:hover,
+QToolButton:hover {
+    background-color: #3A404A;
+    border: 1px solid #A0A8B8;
+}
+
+QPushButton:pressed,
+QToolButton:pressed {
+    background-color: #2A2F36;
+    border: 1px solid #7A8290;
+}
+
+QPushButton#dangerButton {
+    background-color: #54313A;
+    border-color: #B06273;
+}
+
+/* =========================
+   TREE / LIST
+   ========================= */
+
+QTreeWidget,
+QListWidget,
+QTreeView,
+QListView {
+    background-color: #22262C;
+    border: 1px solid #7E8797; /* مرز قوی */
+}
+
+QTreeWidget::item:selected,
+QListWidget::item:selected {
+    background-color: #4C8DFF;
+    color: #FFFFFF;
+}
+
+/* =========================
+   TAB WIDGET
+   ========================= */
+
+QTabWidget::pane {
+    border: 1px solid #7E8797;
+    background-color: #22262C;
+}
+
+QTabBar::tab {
+    background-color: #2B2F36;
+    border: 1px solid #9099AB;
+    padding: 5px 12px;
+}
+
+QTabBar::tab:selected {
+    background-color: #323841;
+    border-color: #4C8DFF;
+}
+
+/* =========================
+   STATUSBAR
+   ========================= */
+
+QStatusBar {
+    background-color: #252931;
+    border-top: 1px solid #6F7787;
+}
+
+/* =========================
+   LOG CONSOLE
+   ========================= */
+
+QPlainTextEdit#logConsole {
+    background-color: #1A1C20;
+    border: 1px solid #8C95A8; /* بسیار روشن و مشخص */
+    font-family: &quot;Consolas&quot;, &quot;Fira Code&quot;, monospace;
+    font-size: 12px;
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>13</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Object's Name</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="object_name">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QListView" name="object_components"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="add_component_button">
+     <property name="text">
+      <string>add Component</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>278</width>
+       <height>179</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

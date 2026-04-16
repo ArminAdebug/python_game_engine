@@ -23,9 +23,9 @@ def main():
 
     window = gui.Window(game_engine.directx_window.get_hwnd())
 
-    window.ui.fun1.clicked.connect(lambda: game_engine.run_game(window.timer))
+    window.ui.pushButton.clicked.connect(lambda: game_engine.run_game(window.timer))
 
-    window.ui.fun3.clicked.connect(game_engine.exit_loop)
+    window.ui.pushButton_2.clicked.connect(game_engine.exit_loop)
 
     game_engine.blank_screen()
 
