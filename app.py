@@ -7,7 +7,7 @@ import faulthandler
 
 from PyQt6.QtWidgets import QApplication
 
-from source import gui
+from source.gui.window import Window
 from source.game_engine import GameEngine
 
 
@@ -15,19 +15,13 @@ faulthandler.enable()
 
 
 def main():
-    """main function to start program
-    """
+    """main function to start program"""
+
     app = QApplication(sys.argv)
 
     game_engine = GameEngine()
 
-    window = gui.Window(game_engine.directx_window.get_hwnd())
-
-    window.ui.pushButton.clicked.connect(lambda: game_engine.run_game(window.timer))
-
-    window.ui.pushButton_2.clicked.connect(game_engine.exit_loop)
-
-    game_engine.blank_screen()
+    window = Window(game_engine)
 
     app.exec()
 

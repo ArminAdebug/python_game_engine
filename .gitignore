@@ -8,7 +8,7 @@ Python + C++ + DirectX + PyQt
 pycache/
 
 *.py[cod]
-
+__pycache__
 *$py.class
 -------- Python Virtual Env --------
 
@@ -86,9 +86,6 @@ test_build/
 temp/
 
 tmp/
--------- Qt UI Generated Files --------
-
-*_ui.py
 -------- Python Compiled Extensions --------
 
 *.pyd

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>444</width>
     <height>300</height>
    </rect>
   </property>
@@ -207,7 +207,7 @@ QPlainTextEdit#logConsole {
       <widget class="QLabel" name="label">
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>100</width>
          <height>30</height>
         </size>
        </property>
@@ -217,13 +217,70 @@ QPlainTextEdit#logConsole {
       </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="x_position"/>
+      <widget class="QDoubleSpinBox" name="x_position">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="y_position"/>
+      <widget class="QDoubleSpinBox" name="y_position">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="z_position"/>
+      <widget class="QDoubleSpinBox" name="z_position">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -233,7 +290,7 @@ QPlainTextEdit#logConsole {
       <widget class="QLabel" name="label_2">
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>100</width>
          <height>30</height>
         </size>
        </property>
@@ -243,13 +300,70 @@ QPlainTextEdit#logConsole {
       </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="x_rotation"/>
+      <widget class="QDoubleSpinBox" name="x_rotation">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="y_rotation"/>
+      <widget class="QDoubleSpinBox" name="y_rotation">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="z_rotation"/>
+      <widget class="QDoubleSpinBox" name="z_rotation">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -259,7 +373,7 @@ QPlainTextEdit#logConsole {
       <widget class="QLabel" name="label_3">
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>100</width>
          <height>30</height>
         </size>
        </property>
@@ -269,13 +383,70 @@ QPlainTextEdit#logConsole {
       </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="x_scale"/>
+      <widget class="QDoubleSpinBox" name="x_scale">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="y_scale"/>
+      <widget class="QDoubleSpinBox" name="y_scale">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="z_scale"/>
+      <widget class="QDoubleSpinBox" name="z_scale">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-16777215.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>16777215.000000000000000</double>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

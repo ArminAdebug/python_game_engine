@@ -36,5 +36,29 @@ class Scene:
         self.objects.append(obj)
         return obj
 
+    def get_game_objects(self) -> list[GameObject]:
+        """returns scene's game objects
+
+        Returns:
+            list[GameObject]: scene's game objects
+        """
+        return self.objects
+
+    def search_game_object(self, target_name : str) -> list[GameObject]:
+        """search scene game objects by name and return a list of game objects
+
+        Args:
+            target_name (str): search name
+
+        Returns:
+            list[GameObject]: list of output Game objects
+        """
+        outs = []
+        for obj in self.objects:
+            if target_name == obj.name:
+                outs.append(obj)
+
+        return outs
+
 
 _SceneKey = type("_SceneKey", (), {})  # pylint: disable=C0103, too-few-public-methods

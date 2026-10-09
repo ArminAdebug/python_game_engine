@@ -6,7 +6,7 @@ main module for handling loop and systems and scenes and other
 
 from typing import Callable
 
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, pyqtSignal, QObject
 
 from source.raw_window import Window
 from source.directx.directx import DirectX
@@ -25,6 +25,10 @@ from source.systems import (
 from api.api_wrapper import Wrapper
 
 
+class UpdateUiSignal(QObject):
+    signal = pyqtSignal()
+
+
 class GameEngine:
     """class of Engine for handling all important things
     """
@@ -37,6 +41,7 @@ class GameEngine:
         self.directx = DirectX(self.directx_window.get_hwnd())
 
         self.asset_manager = AssetManager(self.directx)
+        self.scenes: list[Scene] = []
 
         # setup Systems
         self.render_sys = RenderSys(self.directx)
@@ -53,6 +58,7 @@ class GameEngine:
         self.test()
 
         Wrapper.engine = self
+        self.        ui_update_signal = UpdateUiSignal()
 
     def blank_screen(self):
         """clear screen with solid black color and then present
@@ -92,11 +98,11 @@ class GameEngine:
         timer.start(1)  # 16 : ~60 FPS
         self.blank_screen()
 
-    def check_loop_state(self, timer):
+    def check_loop_state(self, timer : QTimer):
         """checks loop state. if state was False it would stop loop
 
         Args:
-            timer (_type_): current state of loop
+            timer (QTimer): current state of loop
         """
 
         if not self.loop_state:
@@ -111,7 +117,9 @@ class GameEngine:
         Returns:
             Scene: new Game scene
         """
-        return Scene(name, _SceneKey, self.system_registery)
+        new_scene = Scene(name, _SceneKey, self.system_registery)
+        self.scenes.append(new_scene)
+        return new_scene
 
     def exit_loop(self):
         """this method set state of loop to False for check_loop_state stop loop
@@ -119,7 +127,7 @@ class GameEngine:
         self.loop_state = False
 
     def test(self):
-        """an test for testing game new logics.
+        """for testing game new logics.
         """
 
         scene1 = self.new_scene("game_play")
@@ -167,3 +175,7 @@ class GameEngine:
         # update frame states
         frame_info.update()
         Wrapper.frame_info = frame_info
+
+        # update ui values
+        self.ui_update_signal.signal.emit()
+
